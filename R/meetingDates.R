@@ -11,7 +11,7 @@ if(FALSE) {
 
     library(ggplot2)
     tt = sort(table(meetings2$committee))
-    ggplot(meetings2, aes(x = Date, y = factor(committee, names(tt)), colour = committee)) + geom_line() + geom_point() + ylab("Committee")
+    ggplot(meetings2, aes(x = Date, y = factor(committee, names(tt)), colour = committee)) + geom_line() + geom_point() + ylab("Committee")    
 }
 
 
