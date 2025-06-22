@@ -1,0 +1,8 @@
+Package: ASIS
+Version: 0.1-0
+Title: Query information from ASIS - Academic Senate Information System
+Description: We can fetch committee membership, meeting dates, whiteboard information,
+  comment histories, documents.
+Author: Duncan Temple Lang
+Maintainer: DTL <dtemplelang@ucdavis.edu>
+Imports: XML, RCurl, ReadPDF
