@@ -1,5 +1,4 @@
 # library(UCDGARD)
-
 # From ~/OGS/ScrapeASIS - funs.R
 
 downloadFile =

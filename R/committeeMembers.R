@@ -1,11 +1,8 @@
 # https://asis.ucdavis.edu/committee_v2/view_committee.cfm?id=191&year=2020-2021&Quarter=
-#library(RCurl)
-#library(XML)
-
 # From ~/OGS/Senate/Committees/get.R
 
 
-u = "https://asis.ucdavis.edu/committee_v2/view_committee.cfm"
+
 
 if(FALSE) {
     committees = c(gc = 109, prc = 191, prcc = 233, apd = 176, admin = 209, bylaws = 208, courses = 110, epc = 177, welfare = 242)
@@ -35,9 +32,9 @@ function(k = cookie("cookie"), ...)
 
 
 getMembers =
-function(year, id = 191, con = mkCon(...), ...)
+function(year, id = 191, con = mkCon(...), ..., url = "https://asis.ucdavis.edu/committee_v2/view_committee.cfm")
 {
-    tt = getForm(u, id = id, year = sprintf("%d-%d", year, year+1), Quarter = "", curl = con)
+    tt = getForm(url, id = id, year = sprintf("%d-%d", year, year+1), Quarter = "", curl = con)
     doc = htmlParse(tt)
 
     readMembers(doc)
