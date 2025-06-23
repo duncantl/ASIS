@@ -187,9 +187,10 @@ function(df, ...)
 
     df$date2 = d2
     # The cleaned up version so we can compare. Only useful 
-    #    df$date3 = d
-    
-    mergeManual(df, ...)
+    #df$date3 = d    
+    df = mergeManual(df, ...)
+
+    df
 }
 
 
@@ -238,10 +239,12 @@ function(ev)
     ev
 }
 
-if(FALSE) {
-library(GradPrograms)
-codes = programCodes()
-codes = c(codes,
+addProgCodes =
+function(df, codes = GradPrograms::programCodes(), des = deCodes(), gcerts = gcertCodes())
+{
+    names(des) = gsub(" & ", " and ", names(des))
+    names(des) = gsub(", and ", " and ", names(des))    
+    codes = c(codes,
           "Atmospheric Science" = "GATM",
           "Accountancy" = "GPAC",
           "Preventative Veterinary Medicine" = "MVPM",
@@ -252,13 +255,80 @@ codes = c(codes,
           "Art Studio" = "GART",
           "Business Administration (Online)" = "SMBO",
           "Chemistry & Chemical Biology" = "GCCB",
-          "Biochemistry, Molecular, Cell and Developmental Biology" = "GBCB"
+          "Biochemistry, Molecular, Cell and Developmental Biology" = "GBCB",
+          des,
+          gcerts
           )
           
-p = basename(dirname(tls2$file))
-m = match(p, names(codes))
-table(is.na(m))
-unique(p[is.na(m)])
+    p = basename(dirname(df$file))
+    p2 = gsub("Host-Microbe", "Host Microbe", p)
+    p2 = gsub("^DE ", "", p2)
+    p2 = gsub("^GAU?C ", "", p2)    
+    p2[p2 == "Classics and Classical Receptions"] = "Classics and Classical Reception"
+    m = match(p2, names(codes))
+    ans = codes[m]
+
+    ans[is.na(ans) & grepl("EDU PhD", df$file)] = "GEDP"
+    ans[is.na(ans) & grepl("CANDEL", df$file)] = "GELC"
+    ans[is.na(ans) & grepl("EDU \\(All\\)", df$file)] = "Edu+"
+    ans[is.na(ans) & grepl("EDU MA", df$file)] = "GEMC"                
+    ans[is.na(ans) & grepl("NSHL", df$file)] = "GNSL"
+
+# if(any(is.na(ans)))    browser()    
+    
+    df$progCode = ans
+    df
+    
+    # table(is.na(m))
+    # unique(p2[is.na(m)])
+    # table(tls2$file[is.na(m)])
 }
 
 # DEs
+
+
+if(FALSE) {
+
+    a = go()
+    b = addProgCodes(a)
+
+    ggplot(b, aes(x = date, y = factor(progCode))) + geom_line() + geom_point()
+
+    # But need to
+    # a) get the horizontal lines across
+    # b) mark start and end and also identify the different milestone/events - need to "standardize"
+    # c) normalize the dates so all have the same starting point.
+    # d) separate 2 or more reviews for the same program.
+    #    i.e., don't connect the end event of one to the start of another.
+    #    but really put on different lines.
+    #    So make a different factor() than simply progCode.
+
+    ggplot(b, aes(x = date, y = factor(progCode))) + geom_line() + geom_point()
+    b$id = paste0(b$progCode, gsub("^20", "", gsub(" .*", "", basename(b$file))))
+    ggplot(b, aes(x = date, y = factor(id))) + geom_line() + geom_point() + ylab("Program & year")
+
+    c = split(b, b$file)
+    d = lapply(c, function(x) {
+                     x$days = .difftime(x$date2 - min(x$date2, na.rm = TRUE), units = "days")
+                     x
+                  })
+    e = do.call(rbind, d)
+
+    ggplot(e, aes(x = days, y = factor(id))) + geom_line() + geom_point() + ylab("Program & year")    
+    
+    #
+    dur = tapply(b$date2, b$file, function(x) diff(range(x, na.rm = TRUE), units = "days"))
+    plot(density(dur), xlim = c(0, max(dur)))
+    rug(dur)
+    abline(v = median(dur), col = "red")
+
+    which(dur > 1400)
+    # GBST 14015  4.22 years
+    # BMCDB 15-16 3.93 years
+    # GACH 12-13  5.20 years
+    # GFOR 10-11  5.05 years
+    # GPBI 18-19  3.97 years
+
+    # 15 have lasted more than 3 years - of 153 for which we have the timeline.
+    
+}
