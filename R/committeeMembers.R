@@ -5,11 +5,12 @@
 
 
 if(FALSE) {
-    committees = c(gc = 109, prc = 191, prcc = 233, apd = 176, admin = 209, bylaws = 208, courses = 110, epc = 177, welfare = 242)
+    # committees = c(gc = 109, prc = 191, prcc = 233, apd = 176, admin = 209, bylaws = 208, courses = 110, epc = 177, welfare = 242)
+    # See CommitteeIds
     years = 1994:2024
-    con = mkCon()
-    a = lapply(committees, function(id) structure(lapply(years, getMembers, id = id, con = con), names = years))
-    names(a) = names(committees)
+    con = mkASISCon()
+    a = lapply(CommitteeIds, function(id) structure(lapply(years, getMembers, id = id, con = con), names = years))
+    names(a) = names(CommitteeIds)
     saveRDS(a, "GradCommitteeMembers.rds")
 
 
@@ -26,19 +27,29 @@ if(FALSE) {
     all$committee = rep(names(comb), sapply(comb, nrow))
 }
 
+# See mkASISCon()
+if(FALSE) {
 mkCon =
 function(k = cookie("cookie"), ...)
   getCurlHandle(cookie = k, followlocation = TRUE)
+}
 
 
 getMembers =
-function(year, id = 191, con = mkCon(...), ..., url = "https://asis.ucdavis.edu/committee_v2/view_committee.cfm")
+    # getMembers(2024, )
+    # id is the committee id. Can be 
+function(year, id = 191, con = mkASISCon(...), ..., url = "https://asis.ucdavis.edu/committee_v2/view_committee.cfm")
 {
+    if(is.character(id) && !grepl("^[0-9]+$", id)) 
+        id = CommitteeIds[tolower(id)]
+
+    if(is.character(year))
+        year = as.integer(year)
+    
     tt = getForm(url, id = id, year = sprintf("%d-%d", year, year+1), Quarter = "", curl = con)
     doc = htmlParse(tt)
 
     readMembers(doc)
-#    readHTMLTable(doc)
 }
 
 
@@ -62,14 +73,9 @@ function(doc)
     d
 }
 
-normalizeSpace =
-function(x)
-{
-    gsub("[[:space:]]+", " ", x)
-}
-
 
 history =
+    # ???
 function(x)    
 {
     tt = table(x)
