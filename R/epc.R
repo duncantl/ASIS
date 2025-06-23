@@ -88,6 +88,7 @@ function(x)
 MonthNames = months(as.Date(sprintf("2025/%d/1", 1:12)))
 
 fixDate =
+    # Make certain not to confuse this with fixDates in progReviewChronology.Ra
 function(x)
 {
     x = gsub("Novermber", "November", x)

@@ -57,11 +57,12 @@ function(id, dir = "PDFs", con, year = NA, view = getViewForYear(year), u = "htt
     if(!file.exists(dir))
         dir.create(dir)
 
-    invisible( sapply(u2, downloadFile, dir, con) )
+    invisible( sapply(u2, downloadFile2, dir, con) )
 #    invisible(mapply(savePDF, files, sprintf("%s/%d.pdf", dir, seq(along = files))))
 }
 
-downloadFile =
+downloadFile2 =
+    # See committeeFiles.R for other version. Need to keep separate or merge.
 function(url, dir, curl = getCurlHandle(followlocation = TRUE))
 {
     #browser()
