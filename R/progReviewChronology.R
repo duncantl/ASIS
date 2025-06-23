@@ -2,9 +2,9 @@
 # Top-level is go(). We'll change the name later.
 
 getXMLDocs =
-    function()
+function(dir = "~/OGS/ProgramReviewsSenate/Graduate")
 {
-    xml = list.files(pattern = "\\.xml", full.names = TRUE, recursive = TRUE)
+    xml = list.files(dir, pattern = "\\.xml", full.names = TRUE, recursive = TRUE)
     xml = grep("Program Review Resources", xml, invert = TRUE, value = TRUE)
     w = grepl("2008|2009|20[12][0-9]", basename(xml))
     xml2 = xml[w]
@@ -13,7 +13,7 @@ getXMLDocs =
 }
 
 
-go = 
+progReviewTimelines = go = 
 function(xml2 = getXMLDocs(),
          fix = TRUE)
 {    

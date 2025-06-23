@@ -2,4 +2,30 @@ import(XML)
 import(RCurl)
 import(ReadPDF)
 
-exportPattern(".*")
+# exportPattern(".*")
+
+export(getMembers)
+export(mkASISCon)
+
+
+# History of submission to Bylaws and EPC extracted from  GC calls
+export(getHistories, combineHistories)
+
+export(getMeetingDates)
+export(getCommiteeDocs)
+
+
+S3method(plot,CommitteeComments)
+S3method(plot, Histories)
+
+
+export(getWhiteboard)
+
+
+export(progReviewTimelines, prChronology, addProgCodes)
+
+# For Program Review documents.
+export(getXMLDocs)
+
+
+export(downloadCommittee, listCommitteeFiles)
