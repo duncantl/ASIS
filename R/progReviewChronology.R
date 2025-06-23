@@ -1,7 +1,5 @@
-library(XML)
-library(ReadPDF)
-
-if(FALSE) {}
+# Developed as a script and turned into functions.
+# Top-level is go(). We'll change the name later.
 
 getXMLDocs =
     function()
@@ -240,6 +238,7 @@ function(ev)
     ev
 }
 
+if(FALSE) {
 library(GradPrograms)
 codes = programCodes()
 codes = c(codes,
@@ -260,5 +259,6 @@ p = basename(dirname(tls2$file))
 m = match(p, names(codes))
 table(is.na(m))
 unique(p[is.na(m)])
+}
 
 # DEs
