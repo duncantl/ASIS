@@ -12,7 +12,7 @@ export(mkASISCon)
 export(getHistories, combineHistories)
 
 export(getMeetingDates)
-export(getCommiteeDocs)
+export(getCommitteeDocs)
 
 
 S3method(plot,CommitteeComments)
