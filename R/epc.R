@@ -73,6 +73,7 @@ mkHistoryDF =
 function(tmp)
 {
     dt = sapply(tmp, `[`, 1)
+    dt = lapply(dt, function(x) { x = trimws(x); x[x != ""] })
     dt = fixDate(dt)
     txt = normalizeSpace(sapply(tmp, function(x) paste(x[[2]], collapse = " ")))
     data.frame(date = as.Date(dt, "%B %d, %Y"),
@@ -88,9 +89,12 @@ function(x)
 MonthNames = months(as.Date(sprintf("2025/%d/1", 1:12)))
 
 fixDate =
-    # Make certain not to confuse this with fixDates in progReviewChronology.Ra
+    # Make certain not to confuse this with fixDates in progReviewChronology.R
 function(x)
 {
+    x = trimws(x)
+    x = x[x != ""]
+    
     x = gsub("Novermber", "November", x)
     if(any(w <- grepl("^[0-9]+/[0-9]+/[0-9]+", x))) 
        x[w] = format(as.Date(x[w], "%m/%d/%Y"), "%B %d, %Y")
